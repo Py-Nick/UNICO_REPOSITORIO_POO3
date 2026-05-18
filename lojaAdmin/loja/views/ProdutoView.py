@@ -5,6 +5,7 @@ from django.utils import timezone
 
 def list_produto_view(request, id=None):
 
+    print("oi")
     produto = request.GET.get("produto")
     destaque = request.GET.get("destaque")
     promocao = request.GET.get("promocao")
@@ -19,7 +20,7 @@ def list_produto_view(request, id=None):
         now = now - timedelta(days = int(dias))
         produtos = produtos.filter(criado_em__gte=now)
     
-    if produto is not None: produtos = produtos.filter(Produto__contains=produto ) #desse jeito, a pesquisa é parcial 
+    if produto is not None: produtos = produtos.filter(Produto__contains=produto ) #desse jeito, a pesquisa é parcial. sai da igualdade e vai para o "oque contém X?"
     if promocao is not None: produtos = produtos.filter(promocao=promocao) #filtra o produto direto da tabela
     if destaque is not None: produtos = produtos.filter(destaque=destaque)
 
@@ -45,7 +46,7 @@ def list_produto_view(request, id=None):
         return HttpResponse('<h1>Nenhum ID foi informado</h1>')
     elif id is 74:
         return HttpResponse('<h1>Easter Egg!!</h1>')
-    return HttpResponse('<h1>Produto de id %s!</h1>' % id)
+    return HttpResponse('<h1>Produto xx de id %s!</h1>' % id)
 
 '''se quiser definir um id padrão para ou uma mensagem padrão para quando o valor for
 recebido basta ir no medoto list_produto_view do ProdutoView.py e antes do return
