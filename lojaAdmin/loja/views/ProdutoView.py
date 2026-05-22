@@ -1,17 +1,18 @@
-from django.http import HttpResponse
+#from django.http import HttpResponse
+from django.shortcuts import render # Retire from django.http import HttpResponse
 from loja.models import Produto
 from datetime import timedelta, datetime
 from django.utils import timezone
 
 def list_produto_view(request, id=None):
 
-    print("oi")
     produto = request.GET.get("produto")
     destaque = request.GET.get("destaque")
     promocao = request.GET.get("promocao")
     categoria = request.GET.get("categoria")
     fabricante = request.GET.get("fabricante")
     dias = request.GET.get("dias")
+    produtos = Produto.objects.all()
     '''OBS: O nome dentro do parêntese indica como deve ser escrito o parâmetro na url do navegador para que a variável possa capturar o valor do navegador'''
     
     produtos = Produto.objects.all() #instancia ojetos da classe produto, varre a tabela e monta uma lista
@@ -27,14 +28,19 @@ def list_produto_view(request, id=None):
     #if categoria is not None: produtos = produtos.filter(categoria=categoria)
     #if fabricante is not None: produtos = produtos.filter(fabricante=fabricante)
     if categoria is not None: produtos = produtos.filter(categoria__Categoria=categoria)
-    if fabricante is not None: produtos = produtos.filter(fabricante__Fabricante=fabricante) #desse jeito, a pesquisa é específica
+    if fabricante is not None: produtos = produtos.filter(fabricante__Fabricante=fabricante) #desse jeito, a pesquisa é específica. não é pelo id.
 
     if id is not None: produtos = produtos.filter(id=id)
+    print(produtos)
+    # Adicione para definir o contexto e carregar o template
+    context = {
+    'produtos': produtos
+    }
+    return render(request, template_name='produto/produto.html', context=context, status=200)
 
     #produtos = Produto.objects.filter(Produto=produto) #procura o nome exato
     # produtos = Produto.objects.first()
-    print(produtos)
-
+    
     # if destaque is not None: print(destaque)
     # if produto is not None: print(produto)
     # if promocao is not None: print(promocao)
