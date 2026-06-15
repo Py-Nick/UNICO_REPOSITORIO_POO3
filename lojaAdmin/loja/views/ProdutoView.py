@@ -1,4 +1,5 @@
 #from django.http import HttpResponse
+import os
 from django.shortcuts import render, redirect
 from loja.models import Produto, Fabricante, Categoria
 from datetime import timedelta, datetime
@@ -118,16 +119,21 @@ def delete_produto_view(request, id=None):
     context = {'produto': produto}
     return render(request, template_name='produto/produto-delete.html', context=context,status=200)
 
+# src="/media/{{produto.image}}"
+
 def delete_produto_postback(request, id=None):
     # Processa o post back gerado pela action
     if request.method == 'POST':
         # Salva dados editados
         id = request.POST.get("id")
         produto = request.POST.get("Produto")
+        caminho_imagem = produto.image.path
         print("postback-delete")
         print(id)
         try:
             Produto.objects.filter(id=id).delete()
+            if os.path.isfile(caminho_imagem):
+                os.remove(caminho_imagem)
             print("Produto %s excluido com sucesso" % produto)
         except Exception as e:
             print("Erro salvando edição de produto: %s" % e)

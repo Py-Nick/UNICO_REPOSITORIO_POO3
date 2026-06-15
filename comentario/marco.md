@@ -1,1 +1,1 @@
-# capítulo 7 slide 49 ==> terminar a identação de produto-edit.html
+# Atividade do capítulo 7 - falta terminar a parte de excluir a imagem no banco de dados e no disco

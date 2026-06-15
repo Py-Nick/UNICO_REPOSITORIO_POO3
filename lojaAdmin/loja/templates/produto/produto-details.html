@@ -42,6 +42,14 @@
                 <img class="border border-secondary" width="200px" src="/media/{{produto.image}}"/>
             </div>
             <div class="row">
+                <label for="categoria" class="col-md-2">Categoria</label>
+                <input value="{{produto.categoria}}" name="categoria" disable >
+            </div>
+            <div class="row">
+                <label for="fabricante" class="col-md-2">Fabricante</label>
+                <input value="{{produto.fabricante}}" name="fabricante" disable >
+            </div>
+            <div class="row">
                 <!-- <button type="submit" class="btn btn-danger col-md-2 mt-3 mr-2"><i class="fa
                 fa-check"></i> Salvar</button> -->
                 <a href="{% url 'produto' %}" class="btn bg-secondary col-md-2 mt-3"><i class="fa
