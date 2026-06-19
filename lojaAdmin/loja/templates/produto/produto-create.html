@@ -41,7 +41,7 @@
             <div class="row">
                 <label for="CategoriaFk" class="col-md-2" >Categorias</label>
                 <select name="CategoriaFk">
-                    <option value="-1">-----</option>
+                    <option>-----</option>
                     {% for cate in categorias %}
                         {% if produto.categoria_id == cate.id %}
                         <option value="{{cate.id}}" selected>{{cate.Categoria}}</option>

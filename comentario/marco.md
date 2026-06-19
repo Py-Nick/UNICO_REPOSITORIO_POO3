@@ -1,1 +1,1 @@
-# Atividade do capítulo 7 - falta terminar a parte de excluir a imagem no banco de dados e no disco
+# Atividade do capítulo 7 - terminado
