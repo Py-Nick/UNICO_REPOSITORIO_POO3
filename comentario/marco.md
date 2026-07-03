@@ -1,4 +1,4 @@
-# Atividade do capítulo 7 - terminado
+# Atividade do capítulo 8 - começado e erro no usuario/edit
 
 
 usuario1 -> abacate123
