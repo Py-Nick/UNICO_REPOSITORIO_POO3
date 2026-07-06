@@ -5,9 +5,11 @@ from django.contrib.auth.models import User
 
 class UserUsuarioForm(ModelForm):
     def __init__(self, *args, **kwargs):
+        current_user = kwargs.pop('current_user', None) # limpa os argumentos recorrentes do usuário
         super(UserUsuarioForm, self).__init__(*args, **kwargs)
-        if self.instance and self.instance.perfil != 1:
-            del self.fields['perfil'] #deleta campo se o usuário não for adm
+        if current_user and not current_user.is_superuser:
+            if self.instance and self.instance.perfil != 1:
+                del self.fields['perfil'] #deleta campo se o usuário não for adm
     class Meta:
         model = Usuario
         fields = ['user', 'perfil', 'aniversario']

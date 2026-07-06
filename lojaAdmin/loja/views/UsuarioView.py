@@ -3,7 +3,6 @@ from loja.models import Usuario
 from loja.forms.UserUsuarioForm import UserUsuarioForm, UserForm
 
 def list_usuario_view(request, id=None):
-    print("list-usuario")
     # carrega somente usuarios, não inclui os admin
     usuarios = Usuario.objects.filter(perfil=2)
     context = {
@@ -12,28 +11,18 @@ def list_usuario_view(request, id=None):
     return render(request, template_name='usuario/usuario.html', context=context, status=200)
 
 def edit_usuario_view(request):
-    print("edit-usuario")
-    print(request.user)
-    usuario = Usuario.objects.filter(user=request.user).first
-    print("edit-usuario2")
-    usuarioForm = UserUsuarioForm(instance=usuario)
-    print("edit-usuario3")
-    context = {
-    'usuarioForm': usuarioForm
-    }
-    return render(request, template_name='usuario/usuario-edit.html', context=context, status=200)
-    '''usuario = get_object_or_404(Usuario, user=request.user)
+    usuario = Usuario.objects.filter(user=request.user).first()
     emailUnused = True
     message = None
     if request.method == 'POST':
-        usuarioForm = UserUsuarioForm(request.POST, instance=usuario)
+        usuarioForm = UserUsuarioForm(request.POST, instance=usuario, current_user=request.user)
         userForm = UserForm(request.POST, instance=request.user)
         # Verifica se o e-mail que o usuário está tentando utilizar
         # em seu perfil já existe em outro perfil
         verifyEmail = Usuario.objects.filter(user__email=request.POST['email']).exclude(user__id=request.user.id).first()
         emailUnused = verifyEmail is None
     else:
-        usuarioForm = UserUsuarioForm(instance=usuario)
+        usuarioForm = UserUsuarioForm(instance=usuario, current_user=request.user)
         userForm = UserForm(instance=request.user)
     if usuarioForm.is_valid() and userForm.is_valid() and emailUnused:
         usuarioForm.save()
@@ -53,6 +42,6 @@ def edit_usuario_view(request):
     context = {
         'usuarioForm': usuarioForm,
         'userForm': userForm,
-        #'message': message
-    }'''
+        'message': message
+    }
     return render(request, template_name='usuario/usuario-edit.html', context=context, status=200)
