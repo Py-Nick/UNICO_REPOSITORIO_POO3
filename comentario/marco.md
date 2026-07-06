@@ -1,4 +1,4 @@
-# Atividade do capítulo 8 - começado e erro no usuario/edit
+# Atividade 2 do segundo bimestre - 
 
 
 usuario1 -> abacate123
