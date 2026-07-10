@@ -1,8 +1,7 @@
 #from django.http import HttpResponse
-import os
 from django.shortcuts import render, redirect
 from loja.models import Produto, Fabricante, Categoria
-from datetime import timedelta, datetime
+from datetime import timedelta
 from django.utils import timezone
 from django.core.files.storage import FileSystemStorage
 
@@ -14,7 +13,6 @@ def list_produto_view(request, id=None):
     categoria = request.GET.get("categoria")
     fabricante = request.GET.get("fabricante")
     dias = request.GET.get("dias")
-    produtos = Produto.objects.all()
     '''OBS: O nome dentro do parêntese indica como deve ser escrito o parâmetro na url do navegador para que a variável possa capturar o valor do navegador'''
     
     produtos = Produto.objects.all() #instancia ojetos da classe produto, varre a tabela e monta uma lista
