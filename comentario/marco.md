@@ -1,4 +1,4 @@
-# Atividade 2 do segundo bimestre - Na atividade da aula 9. A parte de Categoria está completa, falta fazer o CRUD de Fabricante usando template e Form. Criado todos os arquivos para o funcionamento de template e URLS completas
+# Atividade 2 do segundo bimestre - Na atividade da aula 9. A parte de Categoria está completa, falta fazer o CRUD de Fabricante usando template e Form. Criado todos os arquivos para o funcionamento de template, URLS e forms completos. Resta terminar a VIEW e rever template
 
 
 usuario1 -> abacate123
