@@ -126,3 +126,12 @@ MEDIA_ROOT=os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#define a rota padrão de login do sistema.
+LOGIN_URL = '/login'
+#define para onde seremos redirecionados caso o login ocorra com sucesso.
+LOGIN_REDIRECT_URL = '/'
+#define a rota padrão de logout do sistema.
+LOGOUT_URL = '/logout'
+#define para onde seremos redirecionados caso o logout ocorra com sucesso.
+LOGOUT_REDIRECT_URL = '/login'
