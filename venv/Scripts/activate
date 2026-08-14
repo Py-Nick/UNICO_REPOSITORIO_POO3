@@ -35,7 +35,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\20241011110008\Desktop\Repositório de apoo3\UNICO_REPOSITORIO_POO3\venv"
+VIRTUAL_ENV="C:\Users\20241011110008\Desktop\POO 3 - main activities\UNICO_REPOSITORIO_POO3\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
