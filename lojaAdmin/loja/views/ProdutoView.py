@@ -1,4 +1,5 @@
 #from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from loja.models import Produto, Fabricante, Categoria
 from datetime import timedelta
@@ -53,7 +54,8 @@ def list_produto_view(request, id=None):
     elif id is 74:
         return HttpResponse('<h1>Easter Egg!!</h1>')
     return HttpResponse('<h1>Produto xx de id %s!</h1>' % id)'''
-
+    
+@login_required
 def edit_produto_view(request, id=None):
     produtos = Produto.objects.all()
     if id is not None:
