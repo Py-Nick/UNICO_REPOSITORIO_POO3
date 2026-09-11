@@ -7,7 +7,11 @@ from django.dispatch import receiver
 
 from .Fabricante import Fabricante
 from .Categoria import Categoria
+
 from .Produto import Produto
+
+from .Carrinho import Carrinho
+from .Carrinho import CarrinhoItem
 
 PERFIL = (
     (1, 'Admin'),
