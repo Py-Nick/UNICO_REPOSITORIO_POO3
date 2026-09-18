@@ -12,13 +12,17 @@
             <h3>Carrinho de Compras</h3>
         </div>
         <div class="row">
-        <a class="col-md-4">Produto</a> <a class="col-md-2">Quantidade</a> <a
+        <a class="col-md-4">Produto</a> <a class="col-md-1">Quantidade</a> <a
         class="col-md-2">Preço</a> <a class="col-md-2">Total</a> </div>
         {% if itens %}
             {% for item in itens %}
                 <div class="row">
                     <a class="col-md-4"> {{ item.produto.Produto }}</a>
-                    <a class="col-md-2"> {{ item.quantidade }}</a>
+                    <!--<div class="row mt-2">
+                        <label for="preco" class="col-md-2">Preço</label>
+                        <input name="preco">
+                    </div>-->
+                    <input class="col-md-1" type="number" name="Quantidade" min="1" step="1" value="{{ item.quantidade }}">
                     <a class="col-md-2">R$ {{ item.preco|floatformat:2 }}</a>
                     <a class="col-md-2">R$ {{ item.total }}</a>
                     <a class="col-md-2"> <form method="POST" action="{% url 'remover_carrinhoitem' item.id%}" style="display:inline;"> {% csrf_token %} <button type="submit" class="btn btn-danger">Excluir</button> </form> </a>

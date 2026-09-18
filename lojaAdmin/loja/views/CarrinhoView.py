@@ -115,3 +115,6 @@ def remover_item_view(request, item_id):
     if carrinho_id == item.carrinho.id:
         item.delete()
     return redirect('/carrinho')
+
+def atualizar_quantidade(request, item_id):
+    pass
