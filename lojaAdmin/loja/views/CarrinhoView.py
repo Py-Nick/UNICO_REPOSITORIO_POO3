@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from loja.models import Produto, Carrinho, CarrinhoItem
+from loja.models import Produto, Carrinho, CarrinhoItem, Usuario
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -9,7 +9,6 @@ def create_carrinhoitem_view(request, produto_id=None):
 
     print ('create_carrinhoitem_view')
     produto = get_object_or_404(Produto, pk=produto_id)
-
 
     if produto:
         print('produto: ' + str(produto.id))
@@ -93,17 +92,17 @@ def confirmar_carrinho_view(request):
     carrinho_id = request.session.get('carrinho_id')
     if carrinho_id:
         print ('carrinho: ' + str(carrinho_id))
-        # Obtém o carrinho do usuário
-        carrinho = Carrinho.objects.filter(id=carrinho_id).first()
-        # Obtém o usuário
-        usuario = get_object_or_404(Usuario, user=request.user)
-        print ('Usuario: ' + str(usuario))
-        if usuario:
-            carrinho.user_id = usuario.id
-            carrinho.situacao = 1
-            carrinho.confirmado_em = timezone.make_aware(datetime.today())
-            carrinho.save()
-            print ('carrinho salvo')
+    # Obtém o carrinho do usuário
+    carrinho = Carrinho.objects.filter(id=carrinho_id).first()
+    # Obtém o usuário
+    usuario = get_object_or_404(Usuario, user=request.user)
+    print ('Usuario: ' + str(usuario))
+    if usuario:
+        carrinho.user_id = usuario.id
+        carrinho.situacao = 1
+        carrinho.confirmado_em = timezone.make_aware(datetime.today())
+        carrinho.save()
+        print ('carrinho salvo')
     context = {
         'carrinho': carrinho
     }
