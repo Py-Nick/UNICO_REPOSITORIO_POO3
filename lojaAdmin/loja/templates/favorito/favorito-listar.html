@@ -18,7 +18,13 @@
                 <div class="row">
                     <a class="col-md-4"> {{ item.produto.Produto }}</a>
                     <a class="col-md-2">R$ {{ item.preco|floatformat:2 }}</a>
-                    <a class="col-md-2"> <form method="POST" action="{% url 'remover_favoritoitem' item.id%}" style="display:inline;"> {% csrf_token %} <button type="submit" class="btn btn-danger">Excluir</button> </form> </a>
+                    <a href="{% url 'create_carrinhoitem' prod.id %}" class="btn btn-primary mb-2 mr-2">
+                        <i class="fa fa-plus"></i> Comprar
+                    </a>
+                    <a class="col-md-2"> <form method="POST" action="{% url 'remover_favoritoitem' item.id%}" style="display:inline;"> {% csrf_token %} 
+                        <button type="submit" class="btn btn-danger">Excluir</button> </form> 
+                    </a>
+                
                 </div>
             {% endfor %}
             <div class="mt-4">

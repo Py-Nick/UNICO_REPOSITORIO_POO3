@@ -15,5 +15,7 @@ from .Categoria import Categoria
 
 from .Produto import Produto
 
+from .Favorito import Favorito
+from .Favorito import FavoritoItem
 from .Carrinho import Carrinho
 from .Carrinho import CarrinhoItem

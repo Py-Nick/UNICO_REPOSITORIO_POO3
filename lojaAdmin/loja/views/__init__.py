@@ -5,3 +5,4 @@ from .CategoriaView import *
 from .FabricanteView import *
 from .AuthView import *
 from .CarrinhoView import *
+from .FavoritoView import *

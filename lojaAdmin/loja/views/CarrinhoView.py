@@ -58,13 +58,13 @@ def create_carrinhoitem_view(request, produto_id=None):
     
     carrinho_item.save()
     print ('item de carrinho salvo: ' + str(carrinho_item.id))
-    return redirect('/carrinho')
+    return redirect('list_carrinho') #sugestão da IA
 
 def list_carrinho_view(request):
 
     print ('list_carrinho_view')
     carrinho = None
-
+    carrinho_item = None #adição da IA depois que deu erro
     
     # Tenta pegar o carrinho da sessão ou cria um novo carrinho
     carrinho_id = request.session.get('carrinho_id')
@@ -92,6 +92,8 @@ def confirmar_carrinho_view(request):
     carrinho_id = request.session.get('carrinho_id')
     if carrinho_id:
         print ('carrinho: ' + str(carrinho_id))
+    else:
+        return redirect('list_carrinho') #sugestão da IA #acréscimo da IA Após erro
     # Obtém o carrinho do usuário
     carrinho = Carrinho.objects.filter(id=carrinho_id).first()
     # Obtém o usuário
@@ -114,7 +116,7 @@ def remover_item_view(request, item_id):
     carrinho_id = request.session.get('carrinho_id')
     if carrinho_id == item.carrinho.id:
         item.delete()
-    return redirect('/carrinho')
+    return redirect('list_carrinho') #sugestão da IA
 
 def atualizar_quantidade(request, item_id):
     pass
