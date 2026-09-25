@@ -17,4 +17,4 @@ class FavoritoItem(models.Model):
     def total(self):
         return self.quantidade * self.preco
     def __str__(self):
-        return '{}'.format(self.produto)
+        return '{}'.format(self.id)

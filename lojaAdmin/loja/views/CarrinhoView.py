@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from loja.models import Produto, Carrinho, CarrinhoItem, Usuario
+from django.http import JsonResponse
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -73,7 +74,6 @@ def list_carrinho_view(request):
         # Obtém o carrinho do usuário
         carrinho = Carrinho.objects.filter(id=carrinho_id).first()
         print ('Data do carrinho' + str(carrinho.criado_em) )
-        carrinho_item = None
         # Verifica se o produto já existe no carrinho do usuário
         carrinho_item = CarrinhoItem.objects.filter(carrinho_id=carrinho_id)
         if carrinho_item:
@@ -88,10 +88,18 @@ def list_carrinho_view(request):
 def confirmar_carrinho_view(request):
     print ('confirmar_carrinho_view')
     carrinho = None
+    carrinho_item = None #adição da IA depois que deu erro
+
+
     # Tenta pegar o carrinho da sessão ou cria um novo carrinho
     carrinho_id = request.session.get('carrinho_id')
     if carrinho_id:
         print ('carrinho: ' + str(carrinho_id))
+        carrinho_item = CarrinhoItem.objects.filter(carrinho_id=carrinho_id)
+        if carrinho_item:
+            print ('itens de carrinho encontrado: ' + str(carrinho_item))
+        else:
+            return redirect('list_carrinho')
     else:
         return redirect('list_carrinho') #sugestão da IA #acréscimo da IA Após erro
     # Obtém o carrinho do usuário
@@ -106,7 +114,8 @@ def confirmar_carrinho_view(request):
         carrinho.save()
         print ('carrinho salvo')
     context = {
-        'carrinho': carrinho
+        'carrinho': carrinho,
+        'itens': carrinho_item
     }
     return render(request, 'carrinho/carrinho-confirmado.html', context=context)
 
@@ -119,4 +128,45 @@ def remover_item_view(request, item_id):
     return redirect('list_carrinho') #sugestão da IA
 
 def atualizar_quantidade(request, item_id):
-    pass
+
+    if request.method != 'POST':
+        return JsonResponse( {'erro': 'Método não permitido'}, status=405)
+
+    item = get_object_or_404(CarrinhoItem,id=item_id)
+    carrinho_id = request.session.get('carrinho_id')
+    if not carrinho_id:
+        return JsonResponse(
+            {'erro': 'Carrinho não encontrado'},
+            status=400
+        )
+    if item.carrinho_id != carrinho_id:
+        return JsonResponse(
+            {'erro': 'Item não pertence ao carrinho'},
+            status=403
+        )
+
+    # Pegamos a nova quantidade enviada pelo JavaScript
+    quantidade = request.POST.get('quantidade')
+    try:
+        quantidade = int(quantidade)
+    except (TypeError, ValueError):
+        return JsonResponse(
+            {'erro': 'Quantidade inválida'},
+            status=400
+        )
+    if quantidade < 1:
+        return JsonResponse(
+            {'erro': 'A quantidade deve ser maior que zero'},
+            status=400
+        )
+
+    # Atualizamos o item
+    item.quantidade = quantidade
+    item.save()
+
+    return JsonResponse({
+        'sucesso': True,
+        'quantidade': item.quantidade,
+        'total_item': float(item.quantidade * item.preco),
+        'total_carrinho': float(item.carrinho.total),
+    })
