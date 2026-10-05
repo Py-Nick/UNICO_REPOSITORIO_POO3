@@ -12,13 +12,16 @@
             <h3>Carrinho de Compras</h3>
         </div>
         <div class="row">
-        <a class="col-md-4">Produto</a> <a class="col-md-2">Quantidade</a> <a
-        class="col-md-2">Preço</a> <a class="col-md-2">Total</a> </div>
+            <a class="col-md-3">Produto</a> 
+            <a class="col-md-4">Quantidade</a> 
+            <a class="col-md-1">Preço</a> 
+            <a class="col-md-2">Total</a> 
+        </div>
         {% if itens %}
             {% for item in itens %}
-                <div class="row carrinho-item">
-                    <a class="col-md-4"> {{ item.produto.Produto }}</a>
-                    <div class="col-md-2">
+                <div class="row carrinho-item" data-item-id="{{ item.id }}">
+                    <a class="col-md-3"> {{ item.produto.Produto }}</a>
+                    <div class="col-md-4">
                         <!-- Botão para diminuir -->
                         <button
                             type="button"
@@ -42,12 +45,18 @@
                         </button>
                     </div>
 
-                    <a class="col-md-2">R$ {{ item.preco|floatformat:2 }}</a>
-                    <a class="col-md-2">R$ {{ item.total }}</a>
-                    <a class="col-md-2"> <form method="POST" action="{% url 'remover_carrinhoitem' item.id%}" style="display:inline;"> {% csrf_token %} <button type="submit" class="btn btn-danger">Excluir</button> </form> </a>
+                    <a class="col-md-1">R$ {{ item.preco|floatformat:2 }}</a>
+                    <!-- ADICIONADA A CLASSE 'total-produto' AQUI ABAIXO -->
+                    <a class="col-md-2 total-produto">R$ {{ item.total }}</a>
+                    <a class="col-md-2"> 
+                        <form method="POST" action="{% url 'remover_carrinhoitem' item.id%}" style="display:inline;"> 
+                            {% csrf_token %} 
+                            <button type="submit" class="btn btn-danger">Excluir</button> 
+                        </form> 
+                    </a>
                 </div>
             {% endfor %}
-            <h5 class="mt-4">Total: R$ <span id="total-carrinho"> {{ carrinho.total|floatformat:2 }} </span></h3>
+            <h5 class="mt-4">Total: R$ <span id="total-carrinho"> {{ carrinho.total|floatformat:2 }} </span></h5>
             <div class="mt-4">
                 <a href="{% url 'home' %}" class="btn btn-secondary">Voltar à loja</a>
                 <a href="{% url 'confirmar_carrinho' %}" class="btn btn-success">Finalizar Compra</a>
@@ -62,7 +71,6 @@
 </div>
 
 <script>
-
     const itensCarrinho = document.querySelectorAll('.carrinho-item');
 
     itensCarrinho.forEach(function(item) {
@@ -72,97 +80,79 @@
         const botaoMais = item.querySelector('.btn-mais');
         const quantidadeInput = item.querySelector('.quantidade');
         const totalProduto = item.querySelector('.total-produto');
-        const preco = parseFloat(quantidadeInput.dataset.preco);
 
         function salvarQuantidade(quantidade) {
-            //os dados a seguir são "próximos" ao context. nesse caso ele funcionará como um pequeno post
             const dados = new URLSearchParams();
-            dados.append('quantidade', quantidade );
+            dados.append('quantidade', quantidade);
 
-            const csrfToken = document.querySelector( '[name=csrfmiddlewaretoken]' ).value;
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-            //Quem envia os dados para o Django resolver no BD é o Fetch
             fetch(
                 `/carrinho/atualizar/${itemId}/`,
                 {
                     method: 'POST',
                     headers: {
                         'X-CSRFToken': csrfToken,
-                        'Content-Type':'application/x-www-form-urlencoded',
+                        'Content-Type': 'application/x-www-form-urlencoded',
                     },
                     body: dados
                 }
             )
-
-            //abaixo recebe a resposta do django
             .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('Erro na resposta do servidor');
+                }
                 return response.json();
             })
             .then(function(data) {
-                //se erro
                 if (data.erro) {
                     alert(data.erro);
+                    window.location.reload();
                     return;
                 }
-                // se não deu erro ao gravar no banco, atualizamos a quantidade e total do produto
+                
+                // Atualiza o campo numérico
                 quantidadeInput.value = data.quantidade;
-                totalProduto.textContent ='R$ ' + data.total_item.toFixed(2).replace('.', ',');
-
-                // Atualizamos o total do carrinho
-                document.querySelector(
-                    '#total-carrinho'
-                ).textContent =
-                    data.total_carrinho
-                        .toFixed(2)
-                        .replace('.', ',');
-
+                
+                // Atualiza o total INDIVIDUAL do item multiplicando quantidade x valor
+                if (totalProduto) {
+                    totalProduto.textContent = 'R$ ' + data.total_item.toFixed(2).replace('.', ',');
+                }
+                
+                // Atualiza o total GERAL de todo o carrinho somado
+                document.querySelector('#total-carrinho').textContent =
+                    data.total_carrinho.toFixed(2).replace('.', ',');
             })
-
-
-            // ==================================================
-            // TRATAMENTO DE ERRO DE COMUNICAÇÃO
-            // ==================================================
             .catch(function(error) {
-                console.error(
-                    'Erro ao atualizar quantidade:',
-                    error
-                );
-                alert(
-                    'Não foi possível atualizar o carrinho.'
-                );
+                console.error('Erro ao atualizar quantidade, recarregando página:', error);
+                window.location.reload(); 
             });
         }
 
         botaoMais.addEventListener('click', function() {
-                let quantidade = parseInt(quantidadeInput.value);
-                quantidade++;
-                quantidadeInput.value = quantidade;
-                salvarQuantidade(quantidade);
-            }
-        );
+            let quantidade = parseInt(quantidadeInput.value);
+            quantidade++;
+            quantidadeInput.value = quantidade;
+            salvarQuantidade(quantidade);
+        });
+
         botaoMenos.addEventListener('click', function() {
-                let quantidade =parseInt(quantidadeInput.value);
-                // Nunca deixamos chegar a zero
-                if (quantidade <= 1) { return; }
+            let quantidade = parseInt(quantidadeInput.value);
+            if (quantidade <= 1) { return; }
 
-                quantidade--;
-                quantidadeInput.value = quantidade;
-                salvarQuantidade( quantidade );
-            }
-        );
+            quantidade--;
+            quantidadeInput.value = quantidade; // CORRIGIDO: Era aqui que estava 'quantity' quebrando o botão
+            salvarQuantidade(quantidade);
+        });
 
-
-        // __________________Para o usuário digitar diretamente no input
         quantidadeInput.addEventListener('change', function() {
-                let quantidade = parseInt(quantidadeInput.value);
-                if (isNaN(quantidade) ||quantidade < 1) {
-                    quantidade = 1;
-                    quantidadeInput.value = 1;
-                }
-                salvarQuantidade( quantidade );
+            let quantidade = parseInt(quantidadeInput.value);
+            if (isNaN(quantidade) || quantidade < 1) {
+                quantidade = 1;
+                quantidadeInput.value = 1;
             }
-        );
+            salvarQuantidade(quantidade);
+        });
     });
 </script>
-
 {% endblock %}

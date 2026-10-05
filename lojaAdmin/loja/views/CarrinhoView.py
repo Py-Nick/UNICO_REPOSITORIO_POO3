@@ -130,18 +130,18 @@ def remover_item_view(request, item_id):
 def atualizar_quantidade(request, item_id):
 
     if request.method != 'POST':
-        return JsonResponse( {'erro': 'Método não permitido'}, status=405)
+        return JsonResponse( {'erro': 'Método não permitido 405'}, status=405)
 
     item = get_object_or_404(CarrinhoItem,id=item_id)
     carrinho_id = request.session.get('carrinho_id')
     if not carrinho_id:
         return JsonResponse(
-            {'erro': 'Carrinho não encontrado'},
+            {'erro': 'Carrinho não encontrado 400'},
             status=400
         )
     if item.carrinho_id != carrinho_id:
         return JsonResponse(
-            {'erro': 'Item não pertence ao carrinho'},
+            {'erro': 'Item não pertence ao carrinho 403'},
             status=403
         )
 
@@ -151,12 +151,12 @@ def atualizar_quantidade(request, item_id):
         quantidade = int(quantidade)
     except (TypeError, ValueError):
         return JsonResponse(
-            {'erro': 'Quantidade inválida'},
+            {'erro': 'Quantidade inválida 400'},
             status=400
         )
     if quantidade < 1:
         return JsonResponse(
-            {'erro': 'A quantidade deve ser maior que zero'},
+            {'erro': 'A quantidade deve ser maior que zero 400'},
             status=400
         )
 
